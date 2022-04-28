@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Private Key</title>
+
+    <link rel="stylesheet" href="private.css">
+   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script 
+        type="text/javascript" 
+        src="https://unpkg.com/bsv@1.5.3/bsv.min.js">
+    </script>
+    
+    <script 
+    type="text/javascript" 
+    src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js">
+  </script>
+
+  <script>
+    type="text/javascript"
+    src="https://hdprivatekey.js"
+  </script>
+
+  <link rel="stylesheet" href="css/uikit.min.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/uikit.min.js"></script>
+  <script src="js/uikit-icons.min.js"></script>
+  <script type="text/javascript" src="js/bsv@1.5.0/bsv.min.js"></script>
+  <script type="text/javascript" src="js/qrcode.min.js"></script>
+  <script
+    type="text/javascript"
+    src="js/bsv-mnemonic1.5.0/bsv-mnemonic.min.js"
+  ></script>
+  <script src="js/sweetalert2.all.min.js"></script>
+  <script type="text/javascript" src="js/axios.min.js"></script>
+  </head>
+  <body>
+    <div id="block1">
+      <h1>Your Private Key is:</h1>
+      <p id="privText"> A secret </p>
+    </div>
+
+    <div id="block2">
+      <h1>Your Public Key is:</h1>
+      <p id="pubText"> </p>
+    </div>
+
+    <div id="block3">
+      <h1> Your Address is:</h1>
+      <p id="address"> </p>
+    </div>
+
+    <div id="block4">
+      <h1>Your QR code is:</h1>
+      <p id="qrcode"></p>
+    </div>
+  </body>
+  
+
+    <script> 
+    var privKey = bsv.PrivateKey.fromRandom() ;
+    var pubKey = bsv.PublicKey.fromPrivateKey(privKey) ;
+    const address = bsv.Address.fromPublicKey(pubKey);
+
+    var p = document.querySelector("#privText");
+    var p = document.querySelector("#pubText");
+    p.innerHTML = pubKey.toString();
+
+    var z = document.querySelector("#address");
+    z.innerHTML = address.toString();
+
+    var addressCode = 'bitcoinsv:' + address;
+    
+    new QRCode(document.getElementById("qrcode"), addressCode);
+
+   api_url = 'https://api.whatsonchain.com/v1/bsv/main/address/'
+    async function getBalance(){
+    const response = await fetch(api_url + address + "/balance")
+    const data = await response.json();
+    const{ confirmed, unconfirmed } = data
+    document.getElementById("Balance").textContent = confirmed
+    
+  }
+  getBalance()
+
+var EXTK = ExtKey.derive(extkey, "m/44'/0'/0'/0/99")
+
+ 
+
+
+     </script>
+     <h1>Bitcoin balance</h1>
+     <p>The balance for you wallet is: <span id="Balance"></span> BSV</p>
+
+<p id = "EXTK"> </p>
+
+
+<div id="block">
+  <h1 id="head">HD Private key:</h1> 
+  <p id="Text"></p>
+</div>
+<div id="block">
+  <h1 id="head">HD Public key:</h1> 
+  <p id="Text1"></p>
+</div>
+
+<script> 
+
+
+var hdPrivateKey = bsv.HDPrivateKey.fromRandom();
+
+
+var hdPublicKey = bsv.HDPublicKey.fromHDPrivateKey(hdPrivateKey);
+
+
+var p = document.querySelector("#Text");
+p.innerHTML = hdPrivateKey.toString();
+
+var q = document.querySelector("#Text1");
+q.innerHTML = hdPublicKey.toString();
+
+    </script>
+
+    <script>
+      function generateQr() {
+  addressQr = "bitcoin:" + address;
+  qrcodeNew.makeCode(addressQr);
+}
+
+const randomMnemonic = function () {
+  mnemonic = window.bsvMnemonic;
+  words = mnemonic.fromRandom();
+  mnemonicText.value = words.phrase.toString();
+};
+const hdPrivKeyFunc = function () {
+  hdPrivateKey = bsv.HDPrivateKey.fromSeed(words.toSeed());
+  hdPrivateKeyText.value = hdPrivateKey.toString();
+};
+const privateKeyFunc = function () {
+  privateKey = hdPrivateKey.deriveChild(`m/44'/0'/${num}'`).privateKey;
+  privateKeyText.value = privateKey.toString();
+};
+const publicKeyFunc = function () {
+  publicKey = bsv.PublicKey.fromPrivateKey(privateKey);
+  publicKeyText.value = publicKey.toString();
+};
+const addressFunc = function () {
+  address = bsv.Address.fromPublicKey(publicKey).toString();
+  addressText.value = address.toString();
+};
+const refreshBalance = function () {
+  let config = {
+    method: "get",
+    url:
+      "https://api.whatsonchain.com/v1/bsv/main/address/" +
+      address +
+      "/balance",
+  };
+
+
+  axios(config).then((response) => {
+    let data = JSON.stringify(response.data);
+    console.log(data);
+    let p = document.getElementById("balance");
+    p.value = data;
+  });
+};
+    </script>
+<body>
+  <nav class="uk-navbar-container navColour" uk-navbar>
+    <div class="uk-navbar-center">
+    
+    </div>
+  </nav>
+  <div
+    class="uk-child-width-expand@s"
+    uk-grid
+    style="margin-top: 50px; overflow: hidden"
+  >
+    <div class="uk-grid-item-match" style="text-align: center; height: 50%">
+      <div
+        class="uk-card uk-card-default uk-card-body uk-card-small cardColour"
+      >
+        Generate mnemonic
+
+        <form id="enterMnemonic" action="">
+          <div class="input-container">
+            <input
+              onsubmit="return false"
+              oninput="submitMnemonic()"
+              type="text"
+              id="mnemonicText"
+              style="word-wrap: break-word"
+              value=""
+            />
+            <span
+              class="uk-margin-small-right iconRight"
+              uk-icon="refresh"
+              style="cursor: pointer"
+              id="newMnemonic"
+            ></span>
+          </div>
+        </form>
+      </div>
+      <div
+        id="hdPrivateKey"
+        class="uk-card uk-card-default uk-card-body uk-margin-top uk-card-small cardColour"
+      >
+        HD Private Key
+
+        <form id="enterHdPrivKey" action="">
+          <div class="input-container">
+            <input
+              type="text"
+              id="hdPrivateKeyText"
+              style="word-wrap: break-word"
+              value=""
+              readonly
+            />
+            <span
+              class="uk-margin-small-right iconRight"
+              uk-icon="copy"
+              id="copyHdprivate"
+              onclick="copyHD()"
+              style="cursor: pointer"
+            ></span>
+          </div>
+        </form>
+      </div>
+      <p id="sliderText">Choose derivation path... (M/44'/0'/0')</p>
+      <div class="slidecontainer">
+        <input
+          type="range"
+          min="0"
+          max="99"
+          value="0"
+          class="slider"
+          id="range"
+        />
+      </div>
+      <div
+        id="privateKey"
+        class="uk-card uk-card-default uk-card-body uk-margin-top uk-card-small cardColour"
+      >
+        Private Key
+
+        <form id="enterPrivKey" action="">
+          <div class="input-container">
+            <input
+              type="text"
+              id="privateKeyText"
+              style="word-wrap: break-word"
+              value=""
+              readonly
+            />
+            <span
+              class="uk-margin-small-right iconRight"
+              uk-icon="copy"
+              onclick="copyPrivK()"
+              style="cursor: pointer"
+            ></span>
+          </div>
+        </form>
+  
+      </div>
+      <div
+        id="publicKey"
+        class="uk-card uk-card-default uk-card-body uk-margin-top uk-card-small cardColour"
+      >
+        Public Key
+
+        <form action="">
+          <div class="input-container">
+            <input
+              type="text"
+              id="publicKeyText"
+              style="word-wrap: break-word"
+              value=""
+              readonly
+            />
+            <span
+              class="uk-margin-small-right iconRight"
+              uk-icon="copy"
+              onclick="copyPubK()"
+              style="cursor: pointer"
+            ></span>
+          </div>
+        </form>
+      </div>
+      <div
+        id="addressDiv"
+        class="uk-card uk-card-default uk-card-body uk-margin-top uk-card-small cardColour"
+      >
+        Address
+
+        <form action="">
+          <div class="input-container">
+            <input
+              type="text"
+              id="addressText"
+              style="word-wrap: break-word; cursor: pointer"
+              value=""
+              readonly
+            />
+            <span
+              class="uk-margin-small-right iconRight"
+              uk-icon="copy"
+              onclick="copyAddress()"
+            ></span>
+          </div>
+        </form>
+      </div>
+      <div
+        class="uk-card uk-card-default uk-card-body uk-margin-top uk-card-small cardColour"
+        style="margin-bottom: 5%"
+      >
+        Balance
+        <form action="">
+          <div class="input-container">
+            <input
+              type="text"
+              id="balance"
+              style="word-wrap: break-word"
+              value=""
+              readonly
+            />
+            <span
+              class="uk-margin-small-right iconRight"
+              uk-icon="refresh"
+              onclick="refreshBalance()"
+              style="cursor: pointer"
+            ></span>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+      <div
+        id="qrDiv"
+        style="
+          margin-top: 8vh; 
+          max-width: 360px;
+          height: 300px;
+        "
+      >
+        <div
+          class="qrDivClass"
+          id="qrcode"
+          style="position: relative; width: 60%; margin-left: 30px"
+        ></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function copyHD() {
+      var copyText = hdPrivateKeyText;
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      Swal.fire("", "HD Private Key Copied!", "success");
+    }
+    function copyPrivK() {
+      var copyText = privateKeyText;
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      Swal.fire("", "Private Key Copied!", "success");
+    }
+
+    function copyPubK() {
+      var copyText = publicKeyText;
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      Swal.fire("", "Public Key Copied!", "success");
+    }
+
+    function copyAddress() {
+      var copyText = addressText;
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      Swal.fire("", "Address Copied!", "success");
+    }
+  </script>
+  <script src="js/script.js"></script>
+</body>
+  </body>
+  
+</html>

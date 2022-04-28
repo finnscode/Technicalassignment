@@ -1,0 +1,40 @@
+html {
+    background-color: rgb(3, 82, 128);
+}
+
+h1{ 
+    font-size: 40px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    text-shadow: 1px 2px rgb(112, 117, 117);
+
+}
+img {
+    display: block;
+    margin: auto;
+}
+
+body {
+    width: 1000px;
+    background-color: rgb(9, 61, 44);
+    padding: 20px;
+    border: 5px;
+
+}
+
+p {
+    font-size: 20px;
+    font-family: "Times New Roman";
+}
+#block1 {
+    font-size: 60px;
+    text-align: center;
+    background-color: cornflowerblue;
+    border: black 10px;
+}
+
+script {
+    font-size: 50px;
+    font-family: "Times New Roman";
+
+}

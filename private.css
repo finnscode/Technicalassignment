@@ -1,0 +1,32 @@
+body {
+  background-color: DarkSlateGrey;
+}
+h1 {
+  color: DarkKhaki;
+font-family: Copperplate, Papyrus, fantasy;
+}
+p {
+  color: red;
+Font-size: 150%
+}
+
+
+#pubText {
+    font-family: Copperplate, Papyrus, fantasy;
+    word-break: break-all;
+}
+
+#privText {
+  font-family: Copperplate, Papyrus, fantasy;
+    word-break: break-all;
+}
+
+#address {
+font-family: Copperplate, Papyrus, fantasy;
+word-break: break-all;
+}
+
+#qrcode {
+font-family: Copperplate, Papyrus, fantasy;
+word-break: break-all;
+}
